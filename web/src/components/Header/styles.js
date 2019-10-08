@@ -55,5 +55,10 @@ export const Profile = styled.div`
     padding: 13px 20px;
     border: 0;
     border-radius: 4px;
+    transition: background 0.2s;
+
+    &:hover {
+      background: ${darken(0.03, "#d44059")}
+    }
   }
 `;

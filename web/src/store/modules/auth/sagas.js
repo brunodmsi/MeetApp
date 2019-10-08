@@ -23,7 +23,8 @@ export function* signIn({ payload }) {
 
     history.push('/dashboard');
   } catch (err) {
-    toast.error('Falha na autenticação. Verifique seus dados.')
+    const { message } = err.response.data;
+    toast.error(`Falha na autenticação. ${message}`)
     yield put(signFailure())
   }
 }
@@ -42,7 +43,8 @@ export function* signUp({ payload }) {
 
     history.push('/');
   } catch (err) {
-    toast.error('Falha no cadastro. Verifique seus dados.');
+    const { message } = err.response.data;
+    toast.error(`Falha no cadastro. ${message}`);
     yield put(signFailure());
   }
 }
@@ -64,5 +66,6 @@ export function signOut() {
 export default all([
   takeLatest('persist/REHYDRATE', setToken),
   takeLatest('@auth/SIGN_IN_REQUEST', signIn),
-  takeLatest('@auth/SIGN_UP_REQUEST', signUp)
+  takeLatest('@auth/SIGN_UP_REQUEST', signUp),
+  takeLatest('@auth/SIGN_OUT', signOut)
 ]);

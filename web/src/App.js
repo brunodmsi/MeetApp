@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import './config/ReactotronConfig';
 
 import Routes from './routes';
-import history from './services/history';
+import history from '~/services/history';
 
 import { store, persistor } from './store'
 
