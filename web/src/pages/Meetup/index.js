@@ -28,8 +28,8 @@ export default function Meetup({  }) {
           rows="4"
           placeholder="Descrição do Meetup"
         />
-        <Input name="date" type="date" placeholder="Quando será?" />
-        {/* <DatePicker /> */}
+        {/* <Input name="date" type="date" placeholder="Quando será?" /> */}
+        <DatePicker />
         <Input name="location" placeholder="Onde será?" />
 
         <button type="submit">

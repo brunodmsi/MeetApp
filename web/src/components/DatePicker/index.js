@@ -3,7 +3,9 @@ import { useField } from '@rocketseat/unform';
 import PropTypes from 'prop-types';
 import { parseISO } from 'date-fns';
 
-import { Picker } from './styles';
+import Picker from 'react-datepicker';
+
+// import { Picker } from './styles';
 
 export default function DatePicker({ selectedDate }) {
   const { fieldName, registerField } = useField('date');
@@ -26,14 +28,23 @@ export default function DatePicker({ selectedDate }) {
 
   return (
     <Picker
-      name={fieldName}
       selected={selected}
       onChange={date => setSelected(date)}
-      ref={ref}
-      placeholderText="Quando será?"
       showTimeSelect
-      dateFormat='Pp'
+      timeFormat="HH:mm"
+      timeIntervals={15}
+      timeCaption="time"
+      dateFormat="MMMM d, yyyy h:mm aa"
     />
+    // <Picker
+    //   name={fieldName}
+    //   selected={selected}
+    //   onChange={date => setSelected(date)}
+    //   ref={ref}
+    //   placeholderText="Quando será?"
+    //   showTimeSelect
+    //   dateFormat='Pp'
+    // />
   );
 }
 
