@@ -4,11 +4,11 @@ import { Form, Input } from '@rocketseat/unform';
 import { MdAddCircleOutline } from 'react-icons/md';
 
 import Banner from '~/components/BannerInput';
-import DatePicker from '~/component/DatePicker';
+import DatePicker from '~/components/DatePicker';
 
 import { Container } from './styles';
 
-export default function Meetup() {
+export default function Meetup({  }) {
   const dispatch = useDispatch();
   // const meetup = useSelector(state => state.meetups);
 
@@ -18,12 +18,18 @@ export default function Meetup() {
 
   return (
     <Container>
-      <Form initialData={} onSubmit={handleSubmit} >
-        <Banner id={meetup.id} />
+      <Form onSubmit={handleSubmit} >
+        <Banner />
 
         <Input name="title" placeholder="Qual o título do Meetup" />
-        <Input name="description" placeholder="Descrição do Meetup" />
-        <DatePicker name="date" placeholder="Quando será?" />
+        <Input
+          name="description"
+          multiline
+          rows="4"
+          placeholder="Descrição do Meetup"
+        />
+        <Input name="date" type="date" placeholder="Quando será?" />
+        {/* <DatePicker /> */}
         <Input name="location" placeholder="Onde será?" />
 
         <button type="submit">

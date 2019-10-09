@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Container = styled.div`
   width: 100%;
   height: 300px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   background: rgba(0, 0, 0, 0.8);
   border: ${props => props.error ? '1px solid red': 0};
   border-radius: 4px;
@@ -27,8 +27,9 @@ export const Container = styled.div`
     }
 
     img {
-      max-width: 90%;
-      max-height: 260px;
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
       background: #eee;
     }
 
