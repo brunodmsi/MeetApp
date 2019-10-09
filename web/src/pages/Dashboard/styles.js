@@ -1,5 +1,15 @@
-import styled from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { darken } from 'polished';
+
+const rotate = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+`;
 
 export const Container = styled.div`
   max-width: 940px;
@@ -54,8 +64,14 @@ export const Container = styled.div`
 
   ul {
     margin-top: 30px;
+
+    > svg {
+      animation: ${rotate} 2s linear infinite;
+    }
   }
 `;
+
+
 
 export const Meetup = styled.div`
   background: rgba(0, 0, 0, 0.1);
