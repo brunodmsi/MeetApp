@@ -8,12 +8,14 @@ import DatePicker from '~/components/DatePicker';
 
 import { Container } from './styles';
 
+import { saveMeetupRequest } from '~/store/modules/meetup/actions';
+
 export default function Meetup({  }) {
   const dispatch = useDispatch();
-  // const meetup = useSelector(state => state.meetups);
+  const meetup = useSelector(state => state.meetups);
 
   function handleSubmit(data) {
-    //dispatch(saveMeetupRequest(data));
+    dispatch(saveMeetupRequest(data));
   }
 
   return (
@@ -28,8 +30,9 @@ export default function Meetup({  }) {
           rows="4"
           placeholder="Descrição do Meetup"
         />
-        {/* <Input name="date" type="date" placeholder="Quando será?" /> */}
+
         <DatePicker />
+
         <Input name="location" placeholder="Onde será?" />
 
         <button type="submit">
