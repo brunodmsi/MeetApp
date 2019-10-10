@@ -1,18 +1,41 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input } from '@rocketseat/unform';
 import { MdAddCircleOutline } from 'react-icons/md';
+
+import { toast } from 'react-toastify';
 
 import Banner from '~/components/BannerInput';
 import DatePicker from '~/components/DatePicker';
 
 import { Container } from './styles';
 
-import { saveMeetupRequest } from '~/store/modules/meetup/actions';
+import api from '~/services/api';
 
-export default function Meetup({  }) {
+import { saveMeetupRequest, getDetailsFailure } from '~/store/modules/meetup/actions';
+
+export default function Meetup() {
   const dispatch = useDispatch();
-  const meetup = useSelector(state => state.meetups);
+  const meetup_id = useSelector(state => state.meetup.id);
+  const [meetup, setMeetup] = useState([]);
+
+  useEffect(() => {
+    async function loadMeetup() {
+      try {
+        const response = await api.get(`/meetups/${meetup_id}`);
+
+        setMeetup(response.data);
+      } catch(err) {
+        setMeetup([]);
+        const { message } = err.response.data;
+        toast.error(`Aconteceu um erro. ${message}`);
+      }
+    }
+
+    if (meetup_id) {
+      loadMeetup();
+    }
+  }, [meetup_id])
 
   function handleSubmit(data) {
     dispatch(saveMeetupRequest(data));
@@ -20,7 +43,7 @@ export default function Meetup({  }) {
 
   return (
     <Container>
-      <Form onSubmit={handleSubmit} >
+      <Form onSubmit={handleSubmit} initialData={meetup} >
         <Banner />
 
         <Input name="title" placeholder="Qual o título do Meetup" />
