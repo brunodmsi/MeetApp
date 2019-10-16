@@ -1,56 +1,90 @@
-import React, { useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useMemo, useEffect, useState } from 'react';
 
 import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt-BR';
+import { toast } from 'react-toastify';
 
-import { MdEdit, MdDeleteForever, MdRoom, MdEvent } from 'react-icons/md';
+import { MdEdit, MdDeleteForever, MdRoom, MdEvent, MdLoop } from 'react-icons/md';
+
+import api from '~/services/api';
+import history from '~/services/history'
 
 import { Container } from './styles';
 
-export default function Details() {
-  const meetup = useSelector(state => state.meetup.data);
+export default function Details(props) {
+  const [meetup, setMeetup] = useState({});
+  const [loading, setLoading] = useState(true);
 
-  const dateFormatted = useMemo(
-    () => meetup.date
-          ? format(parseISO(meetup.date), "d 'de' MMMM', às 'HH'hh'", {
+  useEffect(() => {
+    async function loadMeetup(id) {
+      setLoading(true);
+
+      let { data: meetup } = await api.get(`/meetup/${id}`);
+
+      try {
+        meetup.date = format(
+          parseISO(meetup.date),
+          "d 'de' MMMM', às 'HH'h'",
+          {
             locale: pt,
-          })
-          : ''
-  )
+          }
+        )
+
+        setMeetup(meetup);
+      } catch(err) {
+        setMeetup([])
+        toast.error('Aconteceu algum erro ao carregar');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    const { id } = props.match.params;
+    loadMeetup(id);
+  }, [])
+
+  function handleEdit(id) {
+    history.push('/meetup', { id })
+  }
 
   return (
     <Container>
-      <header>
-        <strong>{meetup.title}</strong>
-        <div>
-          <button className="edit">
-            <MdEdit color="#fff" size={20} />
-            <span>Editar</span>
-          </button>
-          <button className="delete">
-            <MdDeleteForever color="#fff" size={20} />
-            <span>Cancelar</span>
-          </button>
-        </div>
-      </header>
+      {loading
+      ? <MdLoop size={40} color="#fff" />
+      :
+      (
+        <>
+          <header>
+            <strong>{meetup.title}</strong>
+            <div>
+              <button className="edit" onClick={() => handleEdit(meetup.id)} disabled={meetup.past}>
+                <MdEdit color="#fff" size={20} />
+                <span>Editar</span>
+              </button>
+              <button className="delete" disabled={meetup.past}>
+                <MdDeleteForever color="#fff" size={20} />
+                <span>Cancelar</span>
+              </button>
+            </div>
+          </header>
 
-      <section>
-        <img src={meetup.banner.url} alt={meetup.title}/>
-        <p>{meetup.description}</p>
-      </section>
+          <section>
+            <img src={meetup.banner.url} alt={meetup.title}/>
+            <p>{meetup.description}</p>
+          </section>
 
-
-      <footer>
-        <span>
-          <MdRoom color="#fff" size={20} />
-          {dateFormatted}
-        </span>
-        <span>
-          <MdEvent color="#fff" size={20} />
-          {meetup.location}
-        </span>
-      </footer>
+          <footer>
+            <span>
+              <MdRoom color="#fff" size={20} />
+              {meetup.date}
+            </span>
+            <span>
+              <MdEvent color="#fff" size={20} />
+              {meetup.location}
+            </span>
+          </footer>
+        </>
+      )}
     </Container>
   );
 }

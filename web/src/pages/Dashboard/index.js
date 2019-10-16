@@ -7,8 +7,6 @@ import pt from 'date-fns/locale/pt-BR';
 
 import { MdAddCircleOutline, MdChevronRight, MdLoop } from 'react-icons/md';
 
-import { getDetailsRequest } from '~/store/modules/meetup/actions'
-
 import api from '~/services/api';
 import history from '~/services/history';
 
@@ -16,7 +14,6 @@ import { Container, Meetup } from './styles';
 import { toast } from 'react-toastify';
 
 export default function Dashboard() {
-  const dispatch = useDispatch();
   const [meetups, setMeetups] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -57,15 +54,18 @@ export default function Dashboard() {
   }, [])
 
   function handleDetails(id) {
-    dispatch(getDetailsRequest(id));
     history.push(`/details/${id}`);
+  }
+
+  function clearDetails() {
+    history.push(`/meetup`);
   }
 
   return (
     <Container>
       <header>
         <strong>Meus meetups</strong>
-        <button type="button">
+        <button type="button" onClick={() => clearDetails()}>
           <MdAddCircleOutline size={20} color="#fff" />
           <span>Novo meetup</span>
         </button>

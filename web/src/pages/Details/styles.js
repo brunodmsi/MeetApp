@@ -37,6 +37,11 @@ export const Container = styled.div`
         border: 0;
         border-radius: 4px;
 
+        :disabled {
+          cursor: not-allowed;
+          opacity: 0.3;
+        }
+
         display: flex;
         align-items: center;
         justify-content: center;

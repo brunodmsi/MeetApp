@@ -13,11 +13,11 @@ import api from '~/services/api';
 
 export function* saveMeetup({ payload }) {
   try {
-    const meetup = payload.data;
+    const data = payload.data;
 
-    yield call(api.post, 'meetups', meetup);
+    const { data: meetup } = yield call(api.post, 'meetups', data);
 
-    yield put(saveMeetupSuccess());
+    yield put(saveMeetupSuccess(meetup));
 
     toast.success('Meetup criado com sucesso!');
     history.push('/dashboard');
@@ -28,23 +28,6 @@ export function* saveMeetup({ payload }) {
   }
 }
 
-export function* getDetails({ payload }) {
-  try {
-    const { id } = payload;
-
-    const response = yield call(api.get, `meetup/${id}`);
-
-    const { data } = response;
-
-    yield put(getDetailsSuccess(data));
-  } catch(err) {
-    const { message } = err.response.data;
-    toast.error(`Ocorreu um erro ao achar o meetup. ${message}`);
-    yield put(getDetailsFailure());
-  }
-}
-
 export default all([
-  takeLatest('@meetup/SAVE_REQUEST', saveMeetup),
-  takeLatest('@meetup/GET_DETAILS_REQUEST', getDetails)
+  takeLatest('@meetup/SAVE_REQUEST', saveMeetup)
 ]);

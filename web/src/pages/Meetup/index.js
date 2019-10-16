@@ -12,30 +12,45 @@ import { Container } from './styles';
 
 import api from '~/services/api';
 
-import { saveMeetupRequest, getDetailsFailure } from '~/store/modules/meetup/actions';
+import { saveMeetupRequest } from '~/store/modules/meetup/actions';
+import { parseISO } from 'date-fns';
 
-export default function Meetup() {
+export default function Meetup(props) {
   const dispatch = useDispatch();
-  const meetup_id = useSelector(state => state.meetup.id);
-  const [meetup, setMeetup] = useState([]);
+  const [meetup, setMeetup] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadMeetup() {
-      try {
-        const response = await api.get(`/meetups/${meetup_id}`);
+    async function loadMeetup(id) {
+      setLoading(true);
+      const { data: meetup } = await api.get(`/meetup/${id}`);
+      console.tron.log(meetup);
 
-        setMeetup(response.data);
+      try {
+        const data = {
+          ...meetup,
+          date: parseISO(meetup.date)
+        }
+
+        console.tron.log(data);
+
+        setMeetup(data);
       } catch(err) {
-        setMeetup([]);
-        const { message } = err.response.data;
-        toast.error(`Aconteceu um erro. ${message}`);
+        setMeetup([])
+        setLoading(false);
+        toast.error('Aconteceu algum erro ao carregar');
+      } finally {
+        setLoading(false);
       }
     }
 
-    if (meetup_id) {
-      loadMeetup();
+    if (props.location.state) {
+      const { id } = props.location.state;
+      loadMeetup(id);
+    } else {
+      setLoading(false);
     }
-  }, [meetup_id])
+  }, [])
 
   function handleSubmit(data) {
     dispatch(saveMeetupRequest(data));
@@ -44,7 +59,7 @@ export default function Meetup() {
   return (
     <Container>
       <Form onSubmit={handleSubmit} initialData={meetup} >
-        <Banner />
+        <Banner name="file_id" />
 
         <Input name="title" placeholder="Qual o título do Meetup" />
         <Input
